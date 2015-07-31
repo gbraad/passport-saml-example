@@ -10,8 +10,10 @@ module.exports = function (passport, config) {
 		done(null, user);
 	});
 
-	passport.use(new SamlStrategy(
+	var callbackUrl = 'http://localhost:' + config.app.port + config.passport.saml.path;
+	var strategy = new SamlStrategy(
 	  {
+	    callbackUrl: callbackUrl,
 	    path: config.passport.saml.path,
 	    entryPoint: config.passport.saml.entryPoint,
 	    issuer: config.passport.saml.issuer
@@ -25,7 +27,10 @@ module.exports = function (passport, config) {
 				firstName : profile.givenName,
   				lastName : profile.sn
 			});
-	  })
+	  }
 	);
 
+	config.metadata = strategy.generateServiceProviderMetadata();
+
+	passport.use(strategy);
 }

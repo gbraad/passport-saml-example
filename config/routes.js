@@ -32,6 +32,11 @@ module.exports = function(app, config, passport) {
 		}
 	);
 
+	app.get("/saml/metadata", function(req, res) {
+		res.set('Content-Type', 'text/xml');
+		res.send(config.metadata);
+	});
+
 	app.get("/signup", function (req, res) {
 		res.render("signup");
 	});
